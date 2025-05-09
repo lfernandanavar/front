@@ -1,18 +1,22 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Perfil from './pages/Perfil';
-import Reservas from './pages/Reservas';
+// src/App.jsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function App() {
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Reservar from "./pages/Reservar"; // Asegúrate de tener este componente creado
+
+const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/perfil" element={<Perfil />} />
-      <Route path="/reservas" element={<Reservas />} />
-    </Routes>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reservar" element={<Reservar />} />
+        {/* Agrega más rutas según sea necesario */}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

@@ -1,5 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 import cdmxImg from "../assets/vuelos/cdmx.jpg";
 import cancunImg from "../assets/vuelos/cancun.jpg";
 import monterreyImg from "../assets/vuelos/monterrey.jpg";
@@ -8,9 +10,12 @@ import pueblaImg from "../assets/vuelos/puebla.jpg";
 import guadalajaraImg from "../assets/vuelos/guadalajara.jpg";
 import veracruzImg from "../assets/vuelos/veracruz.jpg";
 import tijuanaImg from "../assets/vuelos/tijuana.jpg";
+
 import Navbar from "../components/Navbar";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white text-gray-900 font-sans">
       <Navbar />
@@ -62,7 +67,10 @@ const Home = () => {
               <div className="p-5 space-y-2">
                 <h3 className="text-2xl font-semibold">{vuelo.destino}</h3>
                 <p className="text-gray-500">Desde: {vuelo.precio}</p>
-                <button className="mt-2 bg-black text-white px-4 py-2 rounded-lg shadow hover:bg-gray-800 transition">
+                <button
+                  onClick={() => navigate("/reservar")}
+                  className="mt-2 bg-black text-white px-4 py-2 rounded-lg shadow hover:bg-gray-800 transition"
+                >
                   Reservar ahora
                 </button>
               </div>
