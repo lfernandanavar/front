@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Navbar from "../components/Navbar"; // Ruta relativa desde donde está este componente
 
 export default function Reservas() {
   const vuelo = {
@@ -10,75 +11,135 @@ export default function Reservas() {
     precio: "$850 USD"
   };
 
-  return (
-    <div className="flex flex-col min-h-screen bg-[#E5C9D7]">
-      {/* Navbar */}
-      <nav className="bg-[#26415E] text-white px-6 py-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Aerolínea</h1>
-          <ul className="flex space-x-4">
-            <li><a href="#" className="hover:underline">Inicio</a></li>
-            <li><a href="#" className="hover:underline">Reservas</a></li>
-            <li><a href="#" className="hover:underline">Contacto</a></li>
-          </ul>
-        </div>
-      </nav>
+  const [form, setForm] = useState({
+    nombre: "",
+    email: "",
+    telefono: "",
+    pasaporte: "",
+    equipajeMano: 0,
+    equipajeFacturado: 0,
+    tarjeta: "",
+    vencimiento: "",
+    cvv: ""
+  });
 
-      {/* Contenido principal */}
-      <main className="flex-grow container mx-auto px-6 py-8 space-y-8">
-        <h1 className="text-3xl font-bold text-[#0B1B23]">Reservar Vuelo</h1>
+  const [error, setError] = useState("");
+  const [confirmado, setConfirmado] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validarFormulario = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const pasaporteRegex = /^[A-Z0-9]{6,9}$/;
+    const tarjetaRegex = /^\d{16}$/;
+    const vencimientoRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    const cvvRegex = /^\d{3}$/;
+
+    if (!form.nombre || !form.email || !form.telefono || !form.pasaporte) {
+      return "Por favor completa todos los datos del pasajero.";
+    }
+    if (!emailRegex.test(form.email)) {
+      return "El correo electrónico no es válido.";
+    }
+    if (!pasaporteRegex.test(form.pasaporte)) {
+      return "El número de pasaporte debe tener entre 6 y 9 caracteres (mayúsculas/números).";
+    }
+    if (!tarjetaRegex.test(form.tarjeta)) {
+      return "El número de tarjeta debe tener 16 dígitos.";
+    }
+    if (!vencimientoRegex.test(form.vencimiento)) {
+      return "La fecha de vencimiento debe estar en formato MM/AA.";
+    }
+    if (!cvvRegex.test(form.cvv)) {
+      return "El CVV debe tener 3 dígitos.";
+    }
+
+    return "";
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const mensajeError = validarFormulario();
+    if (mensajeError) {
+      setError(mensajeError);
+      return;
+    }
+
+    setError("");
+    setConfirmado(true);
+    console.log("Reserva enviada:", form);
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+      <Navbar />
+
+      <main className="flex-grow container mx-auto px-6 py-8 space-y-6">
+        <h1 className="text-3xl font-bold">Reservar Vuelo</h1>
 
         {/* Detalles del vuelo */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-[#C48CB3]">
-          <h2 className="text-2xl font-semibold text-[#0B1B23] mb-4">Detalles del Vuelo</h2>
+        <div className="bg-gray-100 p-6 rounded-2xl shadow-md border border-gray-200">
+          <h2 className="text-2xl font-semibold mb-4">Detalles del Vuelo</h2>
           {Object.entries(vuelo).map(([key, value]) => (
-            <p key={key} className="text-[#26415E]">
-              <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}
-            </p>
+            <p key={key}><strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}</p>
           ))}
         </div>
 
-        {/* Formulario del pasajero */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-[#83A6CE]">
-          <h2 className="text-2xl font-semibold text-[#0B1B23] mb-4">Datos del Pasajero</h2>
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Nombre completo" className="p-3 border rounded-xl text-[#0B1B23]" />
-            <input type="email" placeholder="Correo electrónico" className="p-3 border rounded-xl text-[#0B1B23]" />
-            <input type="tel" placeholder="Teléfono" className="p-3 border rounded-xl text-[#0B1B23]" />
-            <input type="text" placeholder="Número de pasaporte" className="p-3 border rounded-xl text-[#0B1B23]" />
-            <div className="md:col-span-2">
-              <button type="submit" className="w-full bg-[#C48CB3] hover:bg-[#a76a97] text-white font-bold py-3 rounded-xl">
+        {!confirmado ? (
+          <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-2xl shadow-md border border-gray-200 space-y-6">
+            {/* Sección Pasajero */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Datos del Pasajero</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre completo" className="p-3 border rounded-xl" />
+                <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="Correo electrónico" className="p-3 border rounded-xl" />
+                <input name="telefono" value={form.telefono} onChange={handleChange} type="tel" placeholder="Teléfono" className="p-3 border rounded-xl" />
+                <input name="pasaporte" value={form.pasaporte} onChange={handleChange} placeholder="Número de pasaporte" className="p-3 border rounded-xl" />
+              </div>
+            </section>
+
+            {/* Sección Equipaje */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Equipaje</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input name="equipajeMano" value={form.equipajeMano} onChange={handleChange} type="number" min="0" placeholder="Maletas de mano" className="p-3 border rounded-xl" />
+                <input name="equipajeFacturado" value={form.equipajeFacturado} onChange={handleChange} type="number" min="0" placeholder="Maletas facturadas" className="p-3 border rounded-xl" />
+              </div>
+            </section>
+
+            {/* Sección Pago */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Pago</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input name="tarjeta" value={form.tarjeta} onChange={handleChange} placeholder="Número de tarjeta (16 dígitos)" className="p-3 border rounded-xl" />
+                <input name="vencimiento" value={form.vencimiento} onChange={handleChange} placeholder="Vencimiento (MM/AA)" className="p-3 border rounded-xl" />
+                <input name="cvv" value={form.cvv} onChange={handleChange} placeholder="CVV (3 dígitos)" className="p-3 border rounded-xl" />
+              </div>
+            </section>
+
+            {error && <p className="text-red-600 font-medium">{error}</p>}
+
+            <div className="text-right">
+              <button
+                type="submit"
+                className="bg-black hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-xl"
+              >
                 Confirmar Reserva
               </button>
             </div>
           </form>
-        </div>
-
-        {/* Formulario del equipaje */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-[#26415E]">
-          <h2 className="text-2xl font-semibold text-[#0B1B23] mb-4">Detalles del Equipaje</h2>
-          <p className="text-[#26415E] mb-4">Selecciona el tipo y cantidad de equipaje permitido para tu vuelo.</p>
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="mano" className="block text-[#26415E] font-semibold mb-2">Maletas de mano</label>
-              <input id="mano" type="number" min="0" placeholder="Cantidad" className="p-3 border rounded-xl text-[#0B1B23]" />
-            </div>
-            <div>
-              <label htmlFor="facturadas" className="block text-[#26415E] font-semibold mb-2">Maletas facturadas</label>
-              <input id="facturadas" type="number" min="0" placeholder="Cantidad" className="p-3 border rounded-xl text-[#0B1B23]" />
-            </div>
-            <div className="md:col-span-2">
-              <button type="submit" className="w-full bg-[#83A6CE] hover:bg-[#6c90b3] text-white font-bold py-3 rounded-xl">
-                Confirmar Equipaje
-              </button>
-            </div>
-          </form>
-        </div>
+        ) : (
+          <div className="bg-gray-100 p-6 rounded-2xl shadow-md border border-gray-200 text-center">
+            <h2 className="text-2xl font-bold text-green-600">¡Reserva Confirmada!</h2>
+            <p className="mt-4">Gracias por tu compra, {form.nombre}. Hemos enviado la confirmación a {form.email}.</p>
+          </div>
+        )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#26415E] text-white text-center py-8 px-4">
-        <p className="text-lg font-medium">¿Tienes dudas? Contáctanos: contacto@aerolinea.com</p>
+      <footer className="bg-gray-900 text-white text-center py-6">
+        <p className="text-lg">¿Tienes dudas? Escríbenos a contacto@aerolinea.com</p>
         <p className="text-sm mt-2">&copy; {new Date().getFullYear()} Aerolínea. Todos los derechos reservados.</p>
       </footer>
     </div>
