@@ -12,6 +12,9 @@ import HomeA from "./pages/HomeA";
 import VuelosA  from "./pages/VuelosA";
 import Usuarios from "./pages/Usuarios";
 import Nominas from "./pages/Nomina";
+import Status  from "./pages/Status";
+import Reportes from "./pages/Reportes";
+import Graficas from "./pages/Graficas";
 
 
 const App = () => {
@@ -28,6 +31,9 @@ const App = () => {
       <Route path="/admin/vuelosa" element={<VuelosA />} />
       <Route path="/admin/usuarios" element={<Usuarios />} />
       <Route path="/admin/nomina" element={<Nominas />} />
+      <Route path="/admin/status" element={<Status />} />
+      <Route path="/admin/reportes" element={<Reportes />} />
+      <Route path="/admin/graficas" element={<Graficas />} />    
 
     
     </Routes>
