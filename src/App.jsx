@@ -15,6 +15,7 @@ import Nominas from "./pages/Nomina";
 import Status  from "./pages/Status";
 import Reportes from "./pages/Reportes";
 import Graficas from "./pages/Graficas";
+import Destinos from "./pages/Destinos";
 
 
 const App = () => {
@@ -34,7 +35,7 @@ const App = () => {
       <Route path="/admin/status" element={<Status />} />
       <Route path="/admin/reportes" element={<Reportes />} />
       <Route path="/admin/graficas" element={<Graficas />} />    
-
+      <Route path="/destinos" element={<Destinos />} />    
     
     </Routes>
   );
